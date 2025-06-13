@@ -147,12 +147,24 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Command Output Viewer */}
-        {selectedLog && (
-          <CommandOutput 
-            log={selectedLog} 
-            onClose={() => setSelectedLog(null)}
-          />
+        {/* Command Output Viewer - More Prominent */}
+        {selectedLog ? (
+          <div className="animate-in slide-in-from-bottom-4 duration-300">
+            <CommandOutput 
+              log={selectedLog} 
+              onClose={() => setSelectedLog(null)}
+            />
+          </div>
+        ) : (
+          <Card className="border-dashed">
+            <CardContent className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Terminal className="h-12 w-12 mb-4 opacity-50" />
+              <h3 className="text-lg font-semibold mb-2">No Command Selected</h3>
+              <p className="text-center max-w-md">
+                Click on any row in the command history table above to view the full command output and details here.
+              </p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

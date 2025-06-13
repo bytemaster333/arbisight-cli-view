@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Clock, Terminal, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock, Terminal, CheckCircle, XCircle, AlertTriangle, Eye } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { LogEntry } from "@/types/logs";
@@ -83,80 +83,92 @@ const CommandTable = ({ data, onRowClick, selectedLog }: CommandTableProps) => {
   );
 
   return (
-    <div className="rounded-md border overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[40px]">Status</TableHead>
-            <TableHead>
-              <SortButton field="timestamp">Timestamp</SortButton>
-            </TableHead>
-            <TableHead>
-              <SortButton field="command">Command</SortButton>
-            </TableHead>
-            <TableHead>
-              <SortButton field="subcommand">Subcommand</SortButton>
-            </TableHead>
-            <TableHead>Args</TableHead>
-            <TableHead className="text-right">
-              <SortButton field="duration">
-                <div className="flex items-center justify-end space-x-1">
-                  <Clock className="h-4 w-4" />
-                  <span>Duration</span>
-                </div>
-              </SortButton>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sortedData.map((log) => (
-            <TableRow 
-              key={log.id}
-              className={`cursor-pointer transition-colors hover:bg-muted/50 ${
-                selectedLog?.id === log.id ? "bg-muted" : ""
-              }`}
-              onClick={() => onRowClick(log)}
-            >
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  {getStatusIcon(log.status)}
-                </div>
-              </TableCell>
-              <TableCell className="font-mono text-sm">
-                {new Date(log.timestamp).toLocaleString()}
-              </TableCell>
-              <TableCell className="max-w-md">
-                <div className="truncate font-mono text-sm">
-                  {log.command}
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline" className="text-xs">
-                  {log.subcommand}
-                </Badge>
-              </TableCell>
-              <TableCell className="max-w-xs">
-                <div className="truncate text-sm text-muted-foreground font-mono">
-                  {log.args || "-"}
-                </div>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex items-center justify-end space-x-2">
-                  <span className="font-mono text-sm">{log.duration.toFixed(2)}s</span>
-                  {getStatusBadge(log.status)}
-                </div>
-              </TableCell>
+    <div className="space-y-4">
+      {/* Instructions */}
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+        <Eye className="h-4 w-4" />
+        <span>Click on any row to view the full command output below</span>
+      </div>
+
+      <div className="rounded-md border overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[40px]">Status</TableHead>
+              <TableHead>
+                <SortButton field="timestamp">Timestamp</SortButton>
+              </TableHead>
+              <TableHead>
+                <SortButton field="command">Command</SortButton>
+              </TableHead>
+              <TableHead>
+                <SortButton field="subcommand">Subcommand</SortButton>
+              </TableHead>
+              <TableHead>Args</TableHead>
+              <TableHead className="text-right">
+                <SortButton field="duration">
+                  <div className="flex items-center justify-end space-x-1">
+                    <Clock className="h-4 w-4" />
+                    <span>Duration</span>
+                  </div>
+                </SortButton>
+              </TableHead>
+              <TableHead className="w-[80px] text-center">Output</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      
-      {sortedData.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
-          <p>No commands found matching your filters</p>
-        </div>
-      )}
+          </TableHeader>
+          <TableBody>
+            {sortedData.map((log) => (
+              <TableRow 
+                key={log.id}
+                className={`cursor-pointer transition-colors hover:bg-muted/50 ${
+                  selectedLog?.id === log.id ? "bg-muted" : ""
+                }`}
+                onClick={() => onRowClick(log)}
+              >
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    {getStatusIcon(log.status)}
+                  </div>
+                </TableCell>
+                <TableCell className="font-mono text-sm">
+                  {new Date(log.timestamp).toLocaleString()}
+                </TableCell>
+                <TableCell className="max-w-md">
+                  <div className="truncate font-mono text-sm">
+                    {log.command}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline" className="text-xs">
+                    {log.subcommand}
+                  </Badge>
+                </TableCell>
+                <TableCell className="max-w-xs">
+                  <div className="truncate text-sm text-muted-foreground font-mono">
+                    {log.args || "-"}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end space-x-2">
+                    <span className="font-mono text-sm">{log.duration.toFixed(2)}s</span>
+                    {getStatusBadge(log.status)}
+                  </div>
+                </TableCell>
+                <TableCell className="text-center">
+                  <Eye className="h-4 w-4 mx-auto text-muted-foreground" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        
+        {sortedData.length === 0 && (
+          <div className="text-center py-8 text-muted-foreground">
+            <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p>No commands found matching your filters</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
