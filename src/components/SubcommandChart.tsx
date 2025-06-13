@@ -24,7 +24,7 @@ const SubcommandChart = ({ data }: SubcommandChartProps) => {
     percentage: ((count / data.length) * 100).toFixed(1)
   }));
 
-  // Color palette using CSS variables
+  // Theme-aware color palette
   const COLORS = [
     "hsl(var(--primary))",
     "hsl(var(--secondary))", 
@@ -42,14 +42,18 @@ const SubcommandChart = ({ data }: SubcommandChartProps) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-popover border rounded-lg p-3 shadow-lg">
-          <p className="font-semibold">{data.subcommand}</p>
-          <p className="text-sm">Count: {data.count}</p>
-          <p className="text-sm">Percentage: {data.percentage}%</p>
+        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+          <p className="font-semibold text-card-foreground">{data.subcommand}</p>
+          <p className="text-sm text-card-foreground">Count: {data.count}</p>
+          <p className="text-sm text-card-foreground">Percentage: {data.percentage}%</p>
         </div>
       );
     }
     return null;
+  };
+
+  const renderCustomizedLabel = ({ subcommand, percentage }: any) => {
+    return `${subcommand} (${percentage}%)`;
   };
 
   if (data.length === 0) {
@@ -99,7 +103,7 @@ const SubcommandChart = ({ data }: SubcommandChartProps) => {
                 labelLine={false}
                 label={({ subcommand, percentage }) => `${subcommand} (${percentage}%)`}
                 outerRadius={80}
-                fill="#8884d8"
+                fill="hsl(var(--primary))"
                 dataKey="count"
               >
                 {chartData.map((entry, index) => (
@@ -112,16 +116,23 @@ const SubcommandChart = ({ data }: SubcommandChartProps) => {
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
               <XAxis 
                 dataKey="subcommand" 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
                 axisLine={{ stroke: "hsl(var(--border))" }}
+                tickLine={{ stroke: "hsl(var(--border))" }}
               />
               <YAxis 
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
                 axisLine={{ stroke: "hsl(var(--border))" }}
-                label={{ value: 'Count', angle: -90, position: 'insideLeft' }}
+                tickLine={{ stroke: "hsl(var(--border))" }}
+                label={{ 
+                  value: 'Count', 
+                  angle: -90, 
+                  position: 'insideLeft',
+                  style: { textAnchor: 'middle', fill: "hsl(var(--muted-foreground))" }
+                }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar 
@@ -143,7 +154,7 @@ const SubcommandChart = ({ data }: SubcommandChartProps) => {
                 className="w-3 h-3 rounded-sm"
                 style={{ backgroundColor: COLORS[index % COLORS.length] }}
               />
-              <span className="font-mono">{entry.subcommand}</span>
+              <span className="font-mono text-foreground">{entry.subcommand}</span>
               <span className="text-muted-foreground">({entry.count})</span>
             </div>
           ))}

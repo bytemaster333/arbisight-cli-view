@@ -22,26 +22,21 @@ const DurationChart = ({ data }: DurationChartProps) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-popover border rounded-lg p-3 shadow-lg">
-          <p className="font-semibold">{data.timestamp}</p>
+        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+          <p className="font-semibold text-card-foreground">{data.timestamp}</p>
           <p className="text-sm font-mono text-muted-foreground mb-1">
             {data.command}
           </p>
-          <p className="text-sm">
+          <p className="text-sm text-card-foreground">
             <span className="font-medium">Duration:</span> {data.duration.toFixed(2)}s
           </p>
-          <p className="text-sm">
+          <p className="text-sm text-card-foreground">
             <span className="font-medium">Subcommand:</span> {data.subcommand}
           </p>
         </div>
       );
     }
     return null;
-  };
-
-  const getLineColor = () => {
-    // Use primary color from design system
-    return "hsl(var(--primary))";
   };
 
   if (data.length === 0) {
@@ -59,25 +54,32 @@ const DurationChart = ({ data }: DurationChartProps) => {
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
           <XAxis 
             dataKey="index"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             axisLine={{ stroke: "hsl(var(--border))" }}
+            tickLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis 
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             axisLine={{ stroke: "hsl(var(--border))" }}
-            label={{ value: 'Duration (s)', angle: -90, position: 'insideLeft' }}
+            tickLine={{ stroke: "hsl(var(--border))" }}
+            label={{ 
+              value: 'Duration (s)', 
+              angle: -90, 
+              position: 'insideLeft',
+              style: { textAnchor: 'middle', fill: "hsl(var(--muted-foreground))" }
+            }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line 
             type="monotone" 
             dataKey="duration" 
-            stroke={getLineColor()}
+            stroke="hsl(var(--primary))"
             strokeWidth={2}
-            dot={{ fill: getLineColor(), strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 6, fill: getLineColor() }}
+            dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 6, fill: "hsl(var(--primary))" }}
           />
         </LineChart>
       </ResponsiveContainer>
