@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Search, Terminal, BarChart3, Clock, Filter } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import SubcommandChart from "@/components/SubcommandChart";
 import CommandOutput from "@/components/CommandOutput";
 import { LogEntry } from "@/types/logs";
 import { generateMockData } from "@/utils/mockData";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Index = () => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -64,9 +64,12 @@ const Index = () => {
               <p className="text-muted-foreground">Stylus CLI Monitoring Dashboard</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>{logs.length} commands logged</span>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>{logs.length} commands logged</span>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
 
